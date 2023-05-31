@@ -1,0 +1,63 @@
+Multiple valued attributes.
+includes class, rel, rev, accept charset, headers and accesskey.
+
+These are attributes under HTML tags that can have more than one value. This values are parsed into a list.
+
+css_soup.p['class']
+# ['body', 'strikeout'].
+
+if an attribute has > 1 value but it isnt a recognized multivalued attribute, it is ignored and printed as string
+you can change the value of the attributes.
+
+you can force them to be parsed as strings using 
+multi_valued_attributes=None
+
+example
+no_list_soup = BeautifulSoup('<p class="body strikeout"></p>', 'html.parser', multi_valued_attributes=None)
+no_list_soup.p['class']
+# 'body strikeout'
+
+to get the values of an attribute into a list rerdless of if its multivalued
+
+use get_attribute_list('attribute')
+example
+d_soup.p.get_attribute_list('id')
+# ["my id"]
+
+
+note: no multivalued attributes if you parse as XML
+
+you can correct this using  multi_valued_attributes=class_is_multi
+
+example
+class_is_multi= { '*' : 'class'}
+xml_soup = BeautifulSoup('<p class="body strikeout"></p>', 'xml', multi_valued_attributes=class_is_multi)
+xml_soup.p['class']
+# ['body', 'strikeout']
+
+
+
+
+
+NAVIGABLE STRING
+
+this is the string within the html tag.
+it is accessed by
+
+tag = soup.p
+text = tag.string
+
+you can convert a navigable string into a Unicode string with str
+
+example
+unicode_string = str(tag.string)
+unicode_string
+# 'Extremely bold'
+type(unicode_string)
+# <type 'str'>
+
+to replace one string with another, you can use .replace_with('string')
+
+tag.string.replace_with('a strong man')
+
+note: If you want to use a NavigableString outside of Beautiful Soup, you should call unicode() on it to turn it into a normal Python Unicode string. If you don’t, your string will carry around a reference to the entire Beautiful Soup parse tree, even when you’re done using Beautiful Soup. This is a big waste of memory.
